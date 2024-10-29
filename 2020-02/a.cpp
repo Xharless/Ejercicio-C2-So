@@ -16,23 +16,27 @@ void Xmom(){
 }
 
 void xMom::print_M(){
-    lock.acquire();
-    while(imprimir == false){
-        cv1.wait(&lock);
+    for(int i = 0; i<2; i++){
+        lock.acquire();
+        while(imprimir == false){
+            cv1.wait(&lock);
+        }
+        cout<<'M';
+        imprimir = false;
+        cv2.signal();
+        lock.release();
     }
-    cout<<'M';
-    imprimir = false;
-    cv2.signal();
-    lock.release();
 }
 
 void xMom::print_A(){
-    lock.release();
-    while(imprimir == true){
-        cv2.wait(lock);
+    for(int i = 0; i<2; i++){
+        lock.release();
+        while(imprimir == true){
+            cv2.wait(lock);
+        }
+        cout << 'A';
+        imprimir = false;
+        cv1.signal();
+        lock.release();
     }
-    cout << 'A';
-    imprimir = false;
-    cv1.signal();
-    lock.release();
 }
